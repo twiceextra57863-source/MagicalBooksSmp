@@ -26,22 +26,6 @@ commands:
     description: Trade power books with another player
     usage: /trade <player>
     permission: phantomsmp.player
-  bookinfo:
-    description: View power book information
-    usage: /bookinfo [player]
-    permission: phantomsmp.admin
-  setbooklevel:
-    description: Set a player's power book level
-    usage: /setbooklevel <player> <level>
-    permission: phantomsmp.admin
-  addkills:
-    description: Add kills to a player's power book
-    usage: /addkills <player> <amount>
-    permission: phantomsmp.admin
-  resetcooldowns:
-    description: Reset all cooldowns for a player
-    usage: /resetcooldowns [player]
-    permission: phantomsmp.admin
 
 permissions:
   phantomsmp.admin:
