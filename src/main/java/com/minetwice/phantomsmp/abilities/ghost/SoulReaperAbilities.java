@@ -35,7 +35,7 @@ public class SoulReaperAbilities {
                         for (int i = 0; i < 20; i++) {
                             double t = i / 20.0;
                             target.getWorld().spawnParticle(
-                                Particle.SPELL_MOB,
+                                Particle.ENTITY_EFFECT,  // Replaced SPELL_MOB
                                 target.getLocation().clone().add(0, 1, 0),
                                 0, 1, 0, 0, 1
                             );
@@ -57,7 +57,7 @@ public class SoulReaperAbilities {
             "Death Sentence",
             "§7Target takes §c+20% damage §7for 5 seconds",
             35, 30, 25,
-            Particle.SPELL_WITCH,
+            Particle.WITCH,  // Replaced SPELL_WITCH
             Sound.ENTITY_WITHER_SHOOT,
             (player, level) -> {
                 int duration = level == 1 ? 100 : level == 2 ? 120 : 140;
@@ -81,7 +81,7 @@ public class SoulReaperAbilities {
                             double z = Math.sin(rad) * 1.5;
                             
                             target.getWorld().spawnParticle(
-                                Particle.SPELL_WITCH,
+                                Particle.WITCH,
                                 target.getLocation().clone().add(x, 1.5, z),
                                 0, 0, 0, 0, 1
                             );
