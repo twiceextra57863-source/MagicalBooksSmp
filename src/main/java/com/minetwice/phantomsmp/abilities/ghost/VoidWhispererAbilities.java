@@ -1,5 +1,6 @@
 package com.minetwice.phantomsmp.abilities.ghost;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -14,7 +15,7 @@ public class VoidWhispererAbilities {
             "Silent Touch",
             "§7Weakness I for §b4 seconds",
             35, 30, 25,
-            Particle.SPELL_MOB,
+            Particle.ENTITY_EFFECT,  // Replaced SPELL_MOB
             Sound.ENTITY_VEX_CHARGE,
             (player, level) -> {
                 int duration = level == 1 ? 80 : level == 2 ? 100 : 120;
@@ -23,7 +24,7 @@ public class VoidWhispererAbilities {
                 // Silent particles
                 for (int i = 0; i < 30; i++) {
                     player.getWorld().spawnParticle(
-                        Particle.SPELL_MOB,
+                        Particle.ENTITY_EFFECT,
                         player.getLocation().clone().add(
                             (Math.random() - 0.5) * radius,
                             Math.random() * 2,
