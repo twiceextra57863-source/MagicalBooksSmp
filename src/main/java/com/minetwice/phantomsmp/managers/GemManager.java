@@ -219,7 +219,7 @@ public class GemManager {
                 // Purple haze effect
                 for (int i = 0; i < 30; i++) {
                     player.getWorld().spawnParticle(
-                        Particle.SPELL_MOB,
+                        Particle.ENTITY_EFFECT,
                         player.getLocation().clone().add(
                             (Math.random() - 0.5) * radius,
                             Math.random() * 3,
