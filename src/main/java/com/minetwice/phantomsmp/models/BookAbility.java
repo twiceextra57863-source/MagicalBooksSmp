@@ -2,6 +2,7 @@ package com.minetwice.phantomsmp.models;
 
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 public class BookAbility {
     
@@ -35,14 +36,28 @@ public class BookAbility {
         };
     }
     
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public Particle getParticle() { return particle; }
-    public Sound getSound() { return sound; }
-    public AbilityExecutor getExecutor() { return executor; }
+    public String getName() { 
+        return name; 
+    }
+    
+    public String getDescription() { 
+        return description; 
+    }
+    
+    public Particle getParticle() { 
+        return particle; 
+    }
+    
+    public Sound getSound() { 
+        return sound; 
+    }
+    
+    public AbilityExecutor getExecutor() { 
+        return executor; 
+    }
     
     @FunctionalInterface
     public interface AbilityExecutor {
-        void execute(org.bukkit.entity.Player player, int level);
+        void execute(Player player, int level);
     }
 }
