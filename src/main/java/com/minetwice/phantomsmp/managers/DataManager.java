@@ -73,6 +73,70 @@ public class DataManager {
         }
     }
     
+package com.minetwice.phantomsmp.managers;
+
+import com.minetwice.phantomsmp.PhantomSMP;
+import com.minetwice.phantomsmp.models.PowerBook;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.sql.*;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+public class DataManager {
+    
+    private final PhantomSMP plugin;
+    private Connection connection;
+    private final File dataFolder;
+    
+    public DataManager(PhantomSMP plugin) {
+        this.plugin = plugin;
+        this.dataFolder = plugin.getDataFolder();
+        
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
+        
+        initializeDatabase();
+    }
+    
+    private void initializeDatabase() {
+        try {
+            // Use SQLite directly
+            File dbFile = new File(dataFolder, "phantomsmp.db");
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
+            
+            createTables();
+            plugin.getLogger().info("§aDatabase connected successfully!");
+            
+        } catch (ClassNotFoundException e) {
+            plugin.getLogger().severe("§cSQLite JDBC driver not found!");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            plugin.getLogger().severe("§cFailed to connect to database!");
+            e.printStackTrace();
+        }
+    }
+    
+    private void createTables() throws SQLException {
+        String createTableSQL = "CREATE TABLE IF NOT EXISTS player_data ("
+            + "player_uuid VARCHAR(36) PRIMARY KEY,"
+            + "player_name VARCHAR(16),"
+            + "book_id VARCHAR(50),"
+            + "book_level INT,"
+            + "kills INT,"
+            + "grace_active BOOLEAN,"
+            + "last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+            + ");";
+        
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(createTableSQL);
+            plugin.getLogger().info("§aDatabase tables created/verified!");
+        }
+    }
+    
     public void savePlayerData(UUID playerUUID) {
         CompletableFuture.runAsync(() -> {
             try {
@@ -85,35 +149,22 @@ public class DataManager {
                 int kills = book != null ? book.getKills() : 0;
                 boolean graceActive = plugin.getGraceManager().isGracePeriod();
                 
-                String upsertSQL = useSQLite ?
-                    "INSERT OR REPLACE INTO player_data (player_uuid, player_name, book_id, book_level, kills, grace_active) VALUES (?, ?, ?, ?, ?, ?)" :
-                    "INSERT INTO player_data (player_uuid, player_name, book_id, book_level, kills, grace_active) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE player_name=?, book_id=?, book_level=?, kills=?, grace_active=?";
+                String upsertSQL = "INSERT OR REPLACE INTO player_data "
+                    + "(player_uuid, player_name, book_id, book_level, kills, grace_active) "
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
                 
                 try (PreparedStatement stmt = connection.prepareStatement(upsertSQL)) {
-                    if (useSQLite) {
-                        stmt.setString(1, playerUUID.toString());
-                        stmt.setString(2, playerName);
-                        stmt.setString(3, bookId);
-                        stmt.setInt(4, bookLevel);
-                        stmt.setInt(5, kills);
-                        stmt.setBoolean(6, graceActive);
-                    } else {
-                        stmt.setString(1, playerUUID.toString());
-                        stmt.setString(2, playerName);
-                        stmt.setString(3, bookId);
-                        stmt.setInt(4, bookLevel);
-                        stmt.setInt(5, kills);
-                        stmt.setBoolean(6, graceActive);
-                        stmt.setString(7, playerName);
-                        stmt.setString(8, bookId);
-                        stmt.setInt(9, bookLevel);
-                        stmt.setInt(10, kills);
-                        stmt.setBoolean(11, graceActive);
-                    }
+                    stmt.setString(1, playerUUID.toString());
+                    stmt.setString(2, playerName);
+                    stmt.setString(3, bookId);
+                    stmt.setInt(4, bookLevel);
+                    stmt.setInt(5, kills);
+                    stmt.setBoolean(6, graceActive);
                     
                     stmt.executeUpdate();
                 }
             } catch (SQLException e) {
+                plugin.getLogger().warning("§cFailed to save data for " + playerUUID);
                 e.printStackTrace();
             }
         });
@@ -133,17 +184,19 @@ public class DataManager {
                         int bookLevel = rs.getInt("book_level");
                         int kills = rs.getInt("kills");
                         
-                        if (bookId != null) {
+                        if (bookId != null && !bookId.isEmpty()) {
                             PowerBook book = plugin.getGemManager().getPowerBookById(bookId);
                             if (book != null) {
                                 book.setLevel(bookLevel);
                                 book.setKills(kills);
                                 plugin.getGemManager().setPlayerBook(playerUUID, book);
+                                plugin.getLogger().info("§aLoaded data for player: " + playerUUID);
                             }
                         }
                     }
                 }
             } catch (SQLException e) {
+                plugin.getLogger().warning("§cFailed to load data for " + playerUUID);
                 e.printStackTrace();
             }
         });
@@ -151,18 +204,22 @@ public class DataManager {
     
     public void saveAll() {
         plugin.getServer().getOnlinePlayers().forEach(p -> savePlayerData(p.getUniqueId()));
+        plugin.getLogger().info("§aAll player data saved!");
     }
     
     public void loadAll() {
         plugin.getServer().getOnlinePlayers().forEach(p -> loadPlayerData(p.getUniqueId()));
+        plugin.getLogger().info("§aAll player data loaded!");
     }
     
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
+                plugin.getLogger().info("§aDatabase connection closed!");
             }
         } catch (SQLException e) {
+            plugin.getLogger().warning("§cError closing database connection!");
             e.printStackTrace();
         }
     }
