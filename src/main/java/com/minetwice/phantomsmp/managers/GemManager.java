@@ -210,7 +210,7 @@ public class GemManager {
             "Mind Haze",
             "Â§7Blindness + Slowness for Â§b2 seconds",
             35, 30, 25,
-            Particle.SPELL_MOB,
+            Particle.ENTITY_EFFECT,
             Sound.ENTITY_VEX_CHARGE,
             (player, level) -> {
                 int duration = level == 1 ? 40 : level == 2 ? 60 : 80;
