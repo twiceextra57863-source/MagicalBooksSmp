@@ -1,5 +1,6 @@
 package com.minetwice.phantomsmp.abilities.ghost;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
