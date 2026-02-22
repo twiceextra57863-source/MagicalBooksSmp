@@ -1,34 +1,34 @@
 package com.minetwice.phantomsmp.utils;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.md_5.bungee.api.ChatColor;
 
 public class MessageUtils {
     
-    private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
+    public static String format(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
     
-    public static Component format(String message) {
-        return SERIALIZER.deserialize(message);
+    public static String colorize(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
     
     public static String stripColor(String message) {
-        return message.replaceAll("§[0-9a-fk-or]", "");
+        return ChatColor.stripColor(message);
     }
     
-    public static Component prefix() {
+    public static String prefix() {
         return format("&8[&5PhantomSMP&8] &7");
     }
     
-    public static Component error(String message) {
+    public static String error(String message) {
         return format("&c&lERROR &8» &7" + message);
     }
     
-    public static Component success(String message) {
+    public static String success(String message) {
         return format("&a&lSUCCESS &8» &7" + message);
     }
     
-    public static Component info(String message) {
+    public static String info(String message) {
         return format("&e&lINFO &8» &7" + message);
     }
 }
