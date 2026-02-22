@@ -1,0 +1,6 @@
+# Magical Books Definitions
+books:
+  fire_grimoire:
+    name: "&cFire Grimoire"
+    type: "elemental"
+    ability: "fireball"
