@@ -1,6 +1,9 @@
 package com.minetwice.phantomsmp.abilities.elemental;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Fireball;
@@ -76,18 +79,17 @@ public class FlameSovereignAbilities {
                         0, 0, 0, 0, 0.1
                     );
                     
-                    // Set blocks on fire
-                    if (Math.random() < 0.3) {
-                        player.getWorld().getBlockAt(
-                            player.getLocation().clone().add(x, 0, z).getBlock()
-                        ).setType(org.bukkit.Material.FIRE);
+                    // Set blocks on fire - Fixed: Get block from location properly
+                    Location blockLoc = player.getLocation().clone().add(x, 0, z);
+                    if (Math.random() < 0.3 && blockLoc.getBlock().getType() == Material.AIR) {
+                        blockLoc.getBlock().setType(Material.FIRE);
                     }
                 }
                 
                 // Damage over time task
                 int[] taskId = new int[1];
                 taskId[0] = player.getServer().getScheduler().scheduleSyncRepeatingTask(
-                    com.minetwice.phantomsmp.PhantomSMP.getInstance(), 
+                    PhantomSMP.getInstance(), 
                     () -> {
                         player.getNearbyEntities(radius, radius, radius).stream()
                             .filter(e -> e instanceof Player && !e.equals(player))
@@ -98,7 +100,7 @@ public class FlameSovereignAbilities {
                 
                 // Cancel after duration
                 player.getServer().getScheduler().scheduleSyncDelayedTask(
-                    com.minetwice.phantomsmp.PhantomSMP.getInstance(),
+                    PhantomSMP.getInstance(),
                     () -> player.getServer().getScheduler().cancelTask(taskId[0]),
                     duration
                 );
