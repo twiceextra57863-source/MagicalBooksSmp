@@ -52,39 +52,47 @@ public class GravityLordAbilities {
             }
         );
     }
+package com.minetwice.phantomsmp.abilities.elemental;
+
+import com.minetwice.phantomsmp.PhantomSMP;
+import com.minetwice.phantomsmp.models.BookAbility;
+import com.minetwice.phantomsmp.utils.MessageUtils;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+public class GravityLordAbilities {
+    
+    public static BookAbility createWeightOfTheWorld() {
+        return new BookAbility(
+            "Weight of the World",
+            "Slowness IV for 2 seconds",
+            35, 30, 25,
+            Particle.CRIT,
+            Sound.ENTITY_IRON_GOLEM_HURT,
+            (player, level) -> {
+                int duration = level == 1 ? 40 : level == 2 ? 60 : 80;
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, duration, 3));
+                player.sendMessage(MessageUtils.format("&7Used &bWeight of the World"));
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_IRON_GOLEM_HURT, 1.0f, 1.0f);
+            }
+        );
+    }
     
     public static BookAbility createZeroGravity() {
         return new BookAbility(
             "Zero Gravity",
-            "§7Levitation for 1 second",
+            "Levitation for 1 second",
             25, 22, 20,
-            Particle.END_ROD,  // Replaced LEVITATION with END_ROD
+            Particle.END_ROD,
             Sound.ENTITY_SHULKER_SHOOT,
             (player, level) -> {
                 int duration = level == 1 ? 20 : level == 2 ? 30 : 40;
-                double radius = level == 1 ? 5 : level == 2 ? 6 : 7;
-                
-                // Anti-gravity field effect
-                for (int i = 0; i < 50; i++) {
-                    double x = (Math.random() - 0.5) * radius;
-                    double z = (Math.random() - 0.5) * radius;
-                    
-                    player.getWorld().spawnParticle(
-                        Particle.END_ROD,  // Replaced LEVITATION with END_ROD
-                        player.getLocation().clone().add(x, Math.random() * 3, z),
-                        0, 0, 0, 0, 0.1
-                    );
-                }
-                
-                // Apply levitation to nearby players
-                player.getNearbyEntities(radius, radius, radius).stream()
-                    .filter(e -> e instanceof Player && !e.equals(player))
-                    .forEach(e -> {
-                        Player target = (Player) e;
-                        target.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, duration, 0));
-                    });
-                
-                player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_SHOOT, 1.0f, 0.8f);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, duration, 0));
+                player.sendMessage(MessageUtils.format("&7Used &bZero Gravity"));
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SHULKER_SHOOT, 1.0f, 1.0f);
             }
         );
     }
@@ -92,51 +100,14 @@ public class GravityLordAbilities {
     public static BookAbility createSingularity() {
         return new BookAbility(
             "Singularity",
-            "§7Drop enemies for fall damage",
+            "Powerful gravity pull",
             40, 35, 30,
             Particle.ENCHANTED_HIT,
             Sound.ENTITY_GENERIC_EXPLODE,
             (player, level) -> {
-                double radius = level == 1 ? 5 : level == 2 ? 6 : 7;
-                double liftStrength = level == 1 ? 1.5 : level == 2 ? 2.0 : 2.5;
-                
-                // First phase: lift everyone up
-                player.getNearbyEntities(radius, radius, radius).stream()
-                    .filter(e -> e instanceof Player && !e.equals(player))
-                    .forEach(e -> {
-                        e.setVelocity(new Vector(0, liftStrength, 0));
-                        
-                        // Lift particles
-                        for (int i = 0; i < 20; i++) {
-                            e.getWorld().spawnParticle(
-                                Particle.ENCHANTED_HIT,
-                                e.getLocation().clone().add(0, i * 0.5, 0),
-                                0, 0, 0, 0, 0.1
-                            );
-                        }
-                    });
-                
-                // Second phase: smash them down after 1 second
-                player.getServer().getScheduler().runTaskLater(
-                    PhantomSMP.getInstance(),
-                    () -> {
-                        player.getNearbyEntities(radius, radius, radius).stream()
-                            .filter(e -> e instanceof Player && !e.equals(player))
-                            .forEach(e -> {
-                                e.setVelocity(new Vector(0, -2.0, 0));
-                                
-                                // Impact effect
-                                e.getWorld().spawnParticle(
-                                    Particle.EXPLOSION,
-                                    e.getLocation(),
-                                    10, 0.5, 0, 0.5, 0.1
-                                );
-                            });
-                    },
-                    20L
-                );
-                
-                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 0.5f);
+                player.sendMessage(MessageUtils.format("&7Used &bSingularity"));
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
+                player.getWorld().spawnParticle(Particle.EXPLOSION, player.getLocation(), 10, 1, 1, 1, 0);
             }
         );
     }
