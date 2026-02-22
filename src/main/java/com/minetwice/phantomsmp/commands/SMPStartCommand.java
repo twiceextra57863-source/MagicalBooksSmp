@@ -4,7 +4,6 @@ import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.PowerBook;
 import com.minetwice.phantomsmp.utils.MessageUtils;
 import com.minetwice.phantomsmp.utils.ParticleUtils;
-import com.minetwice.phantomsmp.utils.SoundUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -48,8 +47,8 @@ public class SMPStartCommand implements CommandExecutor {
         // First timer: 5 seconds
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.showTitle(Title.title(
-                Component.text(MessageUtils.format("&6&lTHE SMP STARTED BY &e&l" + starter.getName())),
-                Component.text(MessageUtils.format("&7Prepare yourself...")),
+                Component.text(MessageUtils.format("&6&lTHE SMP STARTED BY &e&l" + starter.getName())).toString(), // Fixed
+                Component.text(MessageUtils.format("&7Prepare yourself...")).toString(),
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
             ));
         });
@@ -72,7 +71,7 @@ public class SMPStartCommand implements CommandExecutor {
                 if (countdown > 0) {
                     int finalCountdown = countdown;
                     Bukkit.getOnlinePlayers().forEach(p -> {
-                        p.sendActionBar(MessageUtils.format("&e&lGEMS DISTRIBUTED IN: &6&l" + finalCountdown));
+                        p.sendActionBar(Component.text(MessageUtils.format("&e&lGEMS DISTRIBUTED IN: &6&l" + finalCountdown)));
                         p.playSound(p.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
                     });
                     countdown--;
@@ -114,10 +113,10 @@ public class SMPStartCommand implements CommandExecutor {
                     player.setAllowFlight(false);
                     player.setFlying(false);
                     
-                    // Show awakening title
+                    // Show awakening title - Fixed
                     player.showTitle(Title.title(
-                        Component.text(MessageUtils.format("&5&lYOU HAVE AWAKENED")),
-                        Component.text(MessageUtils.format("&d&l" + book.getName())),
+                        Component.text(MessageUtils.format("&5&lYOU HAVE AWAKENED")).toString(),
+                        Component.text(MessageUtils.format("&d&l" + book.getName())).toString(),
                         Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
                     ));
                     
