@@ -1,0 +1,3 @@
+# PhantomSMP Configuration
+grace-period: 3600
+max-gems: 10
