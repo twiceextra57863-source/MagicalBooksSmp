@@ -93,9 +93,10 @@ public class ZenMasterAbilities {
             (player, level) -> {
                 int duration = level == 1 ? 120 : level == 2 ? 140 : 160;
                 
+                // FIXED: Use RESISTANCE instead of DAMAGE_RESISTANCE
                 player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, duration, 2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, 1));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, duration, 0));
                 
                 // Divine aura
                 for (int i = 0; i < 5; i++) {
