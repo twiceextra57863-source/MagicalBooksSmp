@@ -1,6 +1,8 @@
 package com.minetwice.phantomsmp.abilities.ghost;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -50,7 +52,7 @@ public class DreadLordAbilities {
             "Spirit Chain",
             "§7Pull target §b4 blocks §7toward you",
             40, 35, 30,
-            Particle.ENCHANTMENT_TABLE,
+            Particle.ENCHANT,  // Replaced ENCHANTMENT_TABLE
             Sound.ENTITY_ENDERMAN_TELEPORT,
             (player, level) -> {
                 double pullStrength = level == 1 ? 0.5 : level == 2 ? 0.6 : 0.7;
@@ -74,7 +76,7 @@ public class DreadLordAbilities {
                             double z = start.getZ() + (end.getZ() - start.getZ()) * t;
                             
                             player.getWorld().spawnParticle(
-                                Particle.ENCHANTMENT_TABLE,
+                                Particle.ENCHANT,
                                 new Location(player.getWorld(), x, y, z),
                                 0, 0, 0, 0, 1
                             );
@@ -89,7 +91,7 @@ public class DreadLordAbilities {
             "Doom Proclamation",
             "§7Target gets Wither I + §c4 hearts damage",
             150, 130, 100,
-            Particle.SPELL_WITCH,
+            Particle.WITCH,  // Replaced SPELL_WITCH
             Sound.ENTITY_WITHER_AMBIENT,
             (player, level) -> {
                 double damage = level == 1 ? 8 : level == 2 ? 9 : 10;
@@ -115,7 +117,7 @@ public class DreadLordAbilities {
                             double z = Math.sin(rad) * 2;
                             
                             target.getWorld().spawnParticle(
-                                Particle.SPELL_WITCH,
+                                Particle.WITCH,
                                 target.getLocation().clone().add(x, 1.5, z),
                                 0, 0, 0, 0, 1
                             );
