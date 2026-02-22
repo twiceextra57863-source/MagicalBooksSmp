@@ -28,12 +28,16 @@ public class BookAbility {
     }
     
     public int getCooldown(int level) {
-        return switch (level) {
-            case 1 -> baseCooldown;
-            case 2 -> level2Cooldown;
-            case 3 -> level3Cooldown;
-            default -> baseCooldown;
-        };
+        switch (level) {
+            case 1:
+                return baseCooldown;
+            case 2:
+                return level2Cooldown;
+            case 3:
+                return level3Cooldown;
+            default:
+                return baseCooldown;
+        }
     }
     
     public String getName() { 
