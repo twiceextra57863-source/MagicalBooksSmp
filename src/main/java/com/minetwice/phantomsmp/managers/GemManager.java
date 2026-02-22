@@ -275,7 +275,7 @@ public class GemManager {
             "Reality Prison",
             "Â§7Immobilize target for Â§b2 seconds",
             150, 130, 100,
-            Particle.SPELL_INSTANT,
+            Particle.INSTANT_EFFECT,
             Sound.ENTITY_WARDEN_SONIC_BOOM,
             (player, level) -> {
                 Player target = getTargetPlayer(player, 15);
