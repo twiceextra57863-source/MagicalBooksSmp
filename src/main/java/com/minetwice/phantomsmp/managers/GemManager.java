@@ -92,7 +92,8 @@ public class GemManager {
             Sound.ENTITY_ILLUSIONER_CAST_SPELL,
             (player, level) -> {
                 int duration = level == 1 ? 60 : level == 2 ? 80 : 100;
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 1));
+                // FIXED: Use RESISTANCE instead of DAMAGE_RESISTANCE
+                player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, duration, 1));
                 
                 // Spatial distortion effect
                 for (int i = 0; i < 360; i += 15) {
@@ -119,7 +120,8 @@ public class GemManager {
             "Void Pull",
             "Â§7Pull nearby players within Â§b5 blocks",
             45, 40, 35,
-            Particle.ENCHANTMENT_TABLE,
+            // FIXED: Use ENCHANT instead of ENCHANTMENT_TABLE
+            Particle.ENCHANT,
             Sound.ENTITY_ENDERMAN_TELEPORT,
             (player, level) -> {
                 double strength = level == 1 ? 1.0 : level == 2 ? 1.5 : 2.0;
@@ -627,9 +629,10 @@ public class GemManager {
             (player, level) -> {
                 int duration = level == 1 ? 120 : level == 2 ? 140 : 160;
                 
+                // FIXED: Use RESISTANCE instead of DAMAGE_RESISTANCE
                 player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, duration, 2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, 1));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, duration, 0));
                 
                 // Divine aura
                 for (int i = 0; i < 5; i++) {
@@ -656,7 +659,7 @@ public class GemManager {
         );
     }
     
-    // Quick placeholder methods for remaining books (you can expand these)
+    // Quick placeholder methods for remaining books
     private PowerBook createInfernalWarlordBook() {
         return new PowerBook(
             "infernal_warlord",
@@ -989,11 +992,13 @@ public class GemManager {
             name,
             "Â§7Ability description",
             cooldown, cooldown - 5, cooldown - 10,
-            Particle.VILLAGER_HAPPY,
+            // FIXED: Use HAPPY_VILLAGER instead of VILLAGER_HAPPY
+            Particle.HAPPY_VILLAGER,
             Sound.ENTITY_PLAYER_LEVELUP,
             (player, level) -> {
                 player.sendMessage("Â§aUsed " + name);
-                player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, player.getLocation(), 20, 1, 1, 1, 0);
+                // FIXED: Use HAPPY_VILLAGER here too
+                player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, player.getLocation(), 20, 1, 1, 1, 0);
             }
         );
     }
