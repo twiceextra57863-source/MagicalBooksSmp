@@ -1,5 +1,6 @@
 package com.minetwice.phantomsmp.abilities.elemental;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -85,7 +86,7 @@ public class GravityLordAbilities {
             "Singularity",
             "§7Drop enemies for fall damage",
             40, 35, 30,
-            Particle.CRIT_MAGIC,
+            Particle.ENCHANTED_HIT,  // Replaced CRIT_MAGIC
             Sound.ENTITY_GENERIC_EXPLODE,
             (player, level) -> {
                 double radius = level == 1 ? 5 : level == 2 ? 6 : 7;
@@ -100,7 +101,7 @@ public class GravityLordAbilities {
                         // Lift particles
                         for (int i = 0; i < 20; i++) {
                             e.getWorld().spawnParticle(
-                                Particle.CRIT_MAGIC,
+                                Particle.ENCHANTED_HIT,
                                 e.getLocation().clone().add(0, i * 0.5, 0),
                                 0, 0, 0, 0, 0.1
                             );
@@ -109,7 +110,7 @@ public class GravityLordAbilities {
                 
                 // Then: smash them down after 1 second
                 player.getServer().getScheduler().runTaskLater(
-                    com.minetwice.phantomsmp.PhantomSMP.getInstance(),
+                    PhantomSMP.getInstance(),
                     () -> {
                         player.getNearbyEntities(radius, radius, radius).stream()
                             .filter(e -> e instanceof Player && !e.equals(player))
