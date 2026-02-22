@@ -5,6 +5,13 @@ import com.minetwice.phantomsmp.listeners.*;
 import com.minetwice.phantomsmp.managers.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
+package com.minetwice.phantomsmp;
+
+import com.minetwice.phantomsmp.commands.*;
+import com.minetwice.phantomsmp.listeners.*;
+import com.minetwice.phantomsmp.managers.*;
+import org.bukkit.plugin.java.JavaPlugin;
+
 public class PhantomSMP extends JavaPlugin {
     
     private static PhantomSMP instance;
@@ -23,26 +30,32 @@ public class PhantomSMP extends JavaPlugin {
         // Save default config
         saveDefaultConfig();
         
-        // Initialize managers
-        this.dataManager = new DataManager(this);
-        this.gemManager = new GemManager(this);
-        this.cooldownManager = new CooldownManager(this);
-        this.tradeManager = new TradeManager(this);
-        this.graceManager = new GraceManager(this);
-        this.particleManager = new ParticleManager(this);
-        this.animationManager = new AnimationManager(this);
-        
-        // Register commands
-        registerCommands();
-        
-        // Register listeners
-        registerListeners();
-        
-        // Load data
-        dataManager.loadAll();
-        
-        getLogger().info("PhantomSMP v" + getDescription().getVersion() + " enabled!");
-        getLogger().info("Author: MineTwice");
+        try {
+            // Initialize managers
+            this.dataManager = new DataManager(this);
+            this.gemManager = new GemManager(this);
+            this.cooldownManager = new CooldownManager(this);
+            this.tradeManager = new TradeManager(this);
+            this.graceManager = new GraceManager(this);
+            this.particleManager = new ParticleManager(this);
+            this.animationManager = new AnimationManager(this);
+            
+            // Register commands
+            registerCommands();
+            
+            // Register listeners
+            registerListeners();
+            
+            // Load data
+            dataManager.loadAll();
+            
+            getLogger().info("§aPhantomSMP v" + getDescription().getVersion() + " enabled successfully!");
+            getLogger().info("§aAuthor: MineTwice");
+            
+        } catch (Exception e) {
+            getLogger().severe("§cFailed to enable PhantomSMP: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @Override
@@ -50,12 +63,13 @@ public class PhantomSMP extends JavaPlugin {
         // Save all data
         if (dataManager != null) {
             dataManager.saveAll();
+            dataManager.close();
         }
         
         // Cancel all tasks
         getServer().getScheduler().cancelTasks(this);
         
-        getLogger().info("PhantomSMP disabled!");
+        getLogger().info("§cPhantomSMP disabled!");
     }
     
     private void registerCommands() {
@@ -64,10 +78,6 @@ public class PhantomSMP extends JavaPlugin {
         getCommand("books").setExecutor(new GemsCommand(this));
         getCommand("bookgive").setExecutor(new GemGiveCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));
-        getCommand("bookinfo").setExecutor(new DebugCommands(this));
-        getCommand("setbooklevel").setExecutor(new DebugCommands(this));
-        getCommand("addkills").setExecutor(new DebugCommands(this));
-        getCommand("resetcooldowns").setExecutor(new DebugCommands(this));
     }
     
     private void registerListeners() {
@@ -77,6 +87,7 @@ public class PhantomSMP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityListener(this), this);
         getServer().getPluginManager().registerEvents(new CombatListener(this), this);
         getServer().getPluginManager().registerEvents(new TradeListener(this), this);
+        getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
     }
     
     public static PhantomSMP getInstance() {
