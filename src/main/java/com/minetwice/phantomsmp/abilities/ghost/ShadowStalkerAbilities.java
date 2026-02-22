@@ -1,5 +1,6 @@
 package com.minetwice.phantomsmp.abilities.ghost;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -95,7 +96,7 @@ public class ShadowStalkerAbilities {
             "Abyssal Strike",
             "§7AoE blindness in §b5 block radius",
             25, 22, 20,
-            Particle.SMOKE_LARGE,
+            Particle.LARGE_SMOKE,  // Replaced SMOKE_LARGE
             Sound.ENTITY_WARDEN_ATTACK_IMPACT,
             (player, level) -> {
                 double radius = level == 1 ? 5 : level == 2 ? 6 : 7;
@@ -108,7 +109,7 @@ public class ShadowStalkerAbilities {
                     double z = Math.sin(rad) * radius;
                     
                     player.getWorld().spawnParticle(
-                        Particle.SMOKE_LARGE,
+                        Particle.LARGE_SMOKE,
                         player.getLocation().clone().add(x, 1, z),
                         0, 0, 0, 0, 0.1
                     );
