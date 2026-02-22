@@ -1,6 +1,8 @@
 package com.minetwice.phantomsmp.abilities.mythic;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
+import com.minetwice.phantomsmp.utils.MinecraftConstants;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,7 +16,7 @@ public class MindShaperAbilities {
             "Mind Haze",
             "§7Blindness + Slowness for §b2 seconds",
             35, 30, 25,
-            Particle.SPELL_MOB,
+            Particle.ENTITY_EFFECT,  // Replaced SPELL_MOB
             Sound.ENTITY_VEX_CHARGE,
             (player, level) -> {
                 int duration = level == 1 ? 40 : level == 2 ? 60 : 80;
@@ -23,7 +25,7 @@ public class MindShaperAbilities {
                 // Purple haze effect
                 for (int i = 0; i < 30; i++) {
                     player.getWorld().spawnParticle(
-                        Particle.SPELL_MOB,
+                        Particle.ENTITY_EFFECT,
                         player.getLocation().clone().add(
                             (Math.random() - 0.5) * radius,
                             Math.random() * 3,
@@ -79,7 +81,7 @@ public class MindShaperAbilities {
             "Reality Prison",
             "§7Immobilize target for §b2 seconds",
             150, 130, 100,
-            Particle.SPELL_INSTANT,
+            Particle.INSTANT_EFFECT,  // Replaced SPELL_INSTANT
             Sound.ENTITY_WARDEN_SONIC_BOOM,
             (player, level) -> {
                 Player target = getTargetPlayer(player, 15);
@@ -98,7 +100,7 @@ public class MindShaperAbilities {
                         
                         for (double y = 0; y <= 3; y += 0.5) {
                             target.getWorld().spawnParticle(
-                                Particle.SPELL_WITCH,
+                                Particle.WITCH,  // Replaced SPELL_WITCH
                                 target.getLocation().clone().add(x, y, z),
                                 0, 0, 0, 0, 1
                             );
