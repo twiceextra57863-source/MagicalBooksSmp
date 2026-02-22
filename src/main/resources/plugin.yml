@@ -1,0 +1,17 @@
+name: PhantomSMP
+version: 1.0-SNAPSHOT
+main: com.minetwice.phantomsmp.PhantomSMP
+api-version: '1.20'
+commands:
+  smpstart:
+    description: Start the SMP
+  smprewind:
+    description: Rewind the SMP
+  gems:
+    description: View your gems
+  gemgive:
+    description: Give gems to a player
+  trade:
+    description: Trade with another player
+  debug:
+    description: Debug commands
