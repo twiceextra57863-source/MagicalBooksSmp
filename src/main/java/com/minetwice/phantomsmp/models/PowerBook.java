@@ -1,9 +1,11 @@
 package com.minetwice.phantomsmp.models;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -44,9 +46,9 @@ public class PowerBook {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
         
-        // Set book title and author
-        meta.setTitle(Component.text("§8§l[ §r" + getColoredName() + " §8§l]"));
-        meta.setAuthor(Component.text("§7PhantomSMP"));
+        // Set book title and author - Fixed: Use Component.text() properly
+        meta.title(Component.text("§8§l[ §r" + getColoredName() + " §8§l]"));
+        meta.author(Component.text("§7PhantomSMP"));
         
         // Create pages
         List<Component> pages = new ArrayList<>();
@@ -89,14 +91,14 @@ public class PowerBook {
         
         meta.pages(pages);
         
-        // Add persistent data
+        // Add persistent data - Fixed: Use PhantomSMP.getInstance()
         meta.getPersistentDataContainer().set(
-            org.bukkit.NamespacedKey.fromString("phantomsmp:book_id", PhantomSMP.getInstance()),
+            NamespacedKey.fromString("phantomsmp:book_id", PhantomSMP.getInstance()),
             PersistentDataType.STRING, 
             id
         );
         meta.getPersistentDataContainer().set(
-            org.bukkit.NamespacedKey.fromString("phantomsmp:owner", PhantomSMP.getInstance()),
+            NamespacedKey.fromString("phantomsmp:owner", PhantomSMP.getInstance()),
             PersistentDataType.STRING,
             ownerUUID.toString()
         );
@@ -110,7 +112,7 @@ public class PowerBook {
     
     private String getColoredName() {
         return switch (theme.toLowerCase()) {
-            case "anime" -> "§c" + name;
+            case "mythic" -> "§c" + name;
             case "ghost" -> "§7" + name;
             case "elemental" -> "§b" + name;
             default -> "§f" + name;
@@ -143,4 +145,5 @@ public class PowerBook {
     public int getKills() { return kills; }
     public void setKills(int kills) { this.kills = kills; }
     public UUID getOwnerUUID() { return ownerUUID; }
+}D getOwnerUUID() { return ownerUUID; }
 }
