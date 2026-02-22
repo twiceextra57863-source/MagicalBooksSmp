@@ -11,45 +11,9 @@ import org.bukkit.util.Vector;
 
 public class GravityLordAbilities {
     
-    public static BookAbility createWeightOfTheWorld() {
-        return new BookAbility(
-            "Weight of the World",
-            "§7Slowness IV for 2 seconds",
-            35, 30, 25,
-            Particle.CRIT,
-            Sound.ENTITY_IRON_GOLEM_HURT,
-            (player, level) -> {
-                int duration = level == 1 ? 40 : level == 2 ? 60 : 80;
-                double radius = level == 1 ? 4 : level == 2 ? 5 : 6;
-                int slowLevel = level == 1 ? 3 : level == 2 ? 3 : 4;
-                
-                // Gravity field
-                for (int i = 0; i < 360; i += 30) {
-                    double rad = Math.toRadians(i);
-                    double x = Math.cos(rad) * radius;
-                    double z = Math.sin(rad) * radius;
-                    
-                    player.getWorld().spawnParticle(
-                        Particle.CRIT,
-                        player.getLocation().clone().add(x, 1, z),
-                        0, 0, 0, 0, 0.2
-                    );
-                }
-                
-                // Apply slow
-                player.getNearbyEntities(radius, radius, radius).stream()
-package com.minetwice.phantomsmp.abilities.elemental;
-
-import com.minetwice.phantomsmp.PhantomSMP;
-import com.minetwice.phantomsmp.models.BookAbility;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
-
-public class GravityLordAbilities {
+    private GravityLordAbilities() {
+        // Private constructor to prevent instantiation
+    }
     
     public static BookAbility createWeightOfTheWorld() {
         return new BookAbility(
@@ -63,7 +27,7 @@ public class GravityLordAbilities {
                 double radius = level == 1 ? 4 : level == 2 ? 5 : 6;
                 int slowLevel = level == 1 ? 3 : level == 2 ? 3 : 4;
                 
-                // Gravity field
+                // Gravity field effect
                 for (int i = 0; i < 360; i += 30) {
                     double rad = Math.toRadians(i);
                     double x = Math.cos(rad) * radius;
@@ -76,11 +40,13 @@ public class GravityLordAbilities {
                     );
                 }
                 
-                // Apply slow
+                // Apply slow effect to nearby players
                 player.getNearbyEntities(radius, radius, radius).stream()
                     .filter(e -> e instanceof Player && !e.equals(player))
-                    .forEach(e -> ((Player) e).addPotionEffect(
-                        new PotionEffect(PotionEffectType.SLOWNESS, duration, slowLevel)));
+                    .forEach(e -> {
+                        Player target = (Player) e;
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, duration, slowLevel));
+                    });
                 
                 player.playSound(player.getLocation(), Sound.ENTITY_IRON_GOLEM_HURT, 1.0f, 0.5f);
             }
@@ -98,7 +64,7 @@ public class GravityLordAbilities {
                 int duration = level == 1 ? 20 : level == 2 ? 30 : 40;
                 double radius = level == 1 ? 5 : level == 2 ? 6 : 7;
                 
-                // Anti-gravity field
+                // Anti-gravity field effect
                 for (int i = 0; i < 50; i++) {
                     double x = (Math.random() - 0.5) * radius;
                     double z = (Math.random() - 0.5) * radius;
@@ -110,11 +76,13 @@ public class GravityLordAbilities {
                     );
                 }
                 
-                // Apply levitation
+                // Apply levitation to nearby players
                 player.getNearbyEntities(radius, radius, radius).stream()
                     .filter(e -> e instanceof Player && !e.equals(player))
-                    .forEach(e -> ((Player) e).addPotionEffect(
-                        new PotionEffect(PotionEffectType.LEVITATION, duration, 0)));
+                    .forEach(e -> {
+                        Player target = (Player) e;
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, duration, 0));
+                    });
                 
                 player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_SHOOT, 1.0f, 0.8f);
             }
@@ -132,7 +100,7 @@ public class GravityLordAbilities {
                 double radius = level == 1 ? 5 : level == 2 ? 6 : 7;
                 double liftStrength = level == 1 ? 1.5 : level == 2 ? 2.0 : 2.5;
                 
-                // First: lift everyone up
+                // First phase: lift everyone up
                 player.getNearbyEntities(radius, radius, radius).stream()
                     .filter(e -> e instanceof Player && !e.equals(player))
                     .forEach(e -> {
@@ -148,7 +116,7 @@ public class GravityLordAbilities {
                         }
                     });
                 
-                // Then: smash them down after 1 second
+                // Second phase: smash them down after 1 second
                 player.getServer().getScheduler().runTaskLater(
                     PhantomSMP.getInstance(),
                     () -> {
@@ -157,7 +125,7 @@ public class GravityLordAbilities {
                             .forEach(e -> {
                                 e.setVelocity(new Vector(0, -2.0, 0));
                                 
-                                // Impact prediction
+                                // Impact effect
                                 e.getWorld().spawnParticle(
                                     Particle.EXPLOSION,
                                     e.getLocation(),
