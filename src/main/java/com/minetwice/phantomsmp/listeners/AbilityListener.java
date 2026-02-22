@@ -5,13 +5,13 @@ import com.minetwice.phantomsmp.models.PowerBook;
 import com.minetwice.phantomsmp.utils.MessageUtils;
 import com.minetwice.phantomsmp.utils.ParticleUtils;
 import com.minetwice.phantomsmp.utils.SoundUtils;
-import io.papermc.paper.event.player.PlayerItemHeldEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -31,7 +31,7 @@ public class AbilityListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
         
-        if (item.getType() != Material.WRITTEN_BOOK) return;
+        if (item == null || item.getType() != Material.WRITTEN_BOOK) return;
         if (!plugin.getGemManager().isPowerBook(item)) return;
         
         // Cancel default book interaction
@@ -40,7 +40,7 @@ public class AbilityListener implements Listener {
         // Check if player is sneaking
         if (!player.isSneaking()) {
             // Idle particle effects when holding book
-            ParticleUtils.spawnIdleBookParticles(player);
+            plugin.getParticleManager().spawnIdleParticles(player);
             return;
         }
         
@@ -130,7 +130,9 @@ public class AbilityListener implements Listener {
         plugin.getCooldownManager().setCooldown(cooldownKey, cooldown);
         
         // Play effects
-        SoundUtils.playAbilitySound(player, ability.getSound());
+        if (ability.getSound() != null) {
+            player.playSound(player.getLocation(), ability.getSound(), 1.0f, 1.0f);
+        }
         
         // Start cooldown display
         startCooldownDisplay(player, cooldownKey, cooldown);
