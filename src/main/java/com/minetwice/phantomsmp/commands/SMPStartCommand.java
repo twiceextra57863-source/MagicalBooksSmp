@@ -47,8 +47,8 @@ public class SMPStartCommand implements CommandExecutor {
         // First timer: 5 seconds
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.showTitle(Title.title(
-                Component.text(MessageUtils.format("&6&lTHE SMP STARTED BY &e&l" + starter.getName())),
-                Component.text(MessageUtils.format("&7Prepare yourself...")),
+                Component.text(MessageUtils.format("&6&lTHE SMP STARTED BY &e&l" + starter.getName()).replace("§", "&")),
+                Component.text(MessageUtils.format("&7Prepare yourself...").replace("§", "&")),
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
             ));
         });
@@ -71,7 +71,7 @@ public class SMPStartCommand implements CommandExecutor {
                 if (countdown > 0) {
                     int finalCountdown = countdown;
                     Bukkit.getOnlinePlayers().forEach(p -> {
-                        p.sendActionBar(Component.text(MessageUtils.format("&e&lGEMS DISTRIBUTED IN: &6&l" + finalCountdown)));
+                        p.sendActionBar(Component.text(MessageUtils.format("&e&lGEMS DISTRIBUTED IN: &6&l" + finalCountdown).replace("§", "&")));
                         p.playSound(p.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
                     });
                     countdown--;
@@ -115,8 +115,8 @@ public class SMPStartCommand implements CommandExecutor {
                     
                     // Show awakening title
                     player.showTitle(Title.title(
-                        Component.text(MessageUtils.format("&5&lYOU HAVE AWAKENED")),
-                        Component.text(MessageUtils.format("&d&l" + book.getName())),
+                        Component.text(MessageUtils.format("&5&lYOU HAVE AWAKENED").replace("§", "&")),
+                        Component.text(MessageUtils.format("&d&l" + book.getName()).replace("§", "&")),
                         Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
                     ));
                     
