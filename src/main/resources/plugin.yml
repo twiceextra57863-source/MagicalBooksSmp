@@ -1,0 +1,13 @@
+name: MagicalBooksSmp
+version: 1.0-SNAPSHOT
+main: com.magicalbooks.smp.MagicalBooksSmp
+api-version: 1.20
+description: A custom SMP plugin for MagicalBooks.
+authors: [MagicalBooks]
+commands:
+  magical:
+    description: Main command for MagicalBooksSmp.
+permissions:
+  magicalbooks.admin:
+    description: Administrative access to MagicalBooksSmp.
+    default: op
