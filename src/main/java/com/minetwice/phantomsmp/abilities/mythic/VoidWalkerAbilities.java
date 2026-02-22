@@ -20,7 +20,8 @@ public class VoidWalkerAbilities {
             Sound.ENTITY_ILLUSIONER_CAST_SPELL,
             (player, level) -> {
                 int duration = level == 1 ? 60 : level == 2 ? 80 : 100;
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 1));
+                // Fixed: Use RESISTANCE instead of DAMAGE_RESISTANCE
+                player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, duration, 1));
                 
                 // Spatial distortion effect
                 for (int i = 0; i < 360; i += 15) {
@@ -47,7 +48,7 @@ public class VoidWalkerAbilities {
             "Void Pull",
             "§7Pull nearby players within §b5 blocks",
             45, 40, 35,
-            Particle.ENCHANTMENT_TABLE,
+            Particle.ENCHANT, // Fixed: Use ENCHANT instead of ENCHANTMENT_TABLE
             Sound.ENTITY_ENDERMAN_TELEPORT,
             (player, level) -> {
                 double strength = level == 1 ? 1.0 : level == 2 ? 1.5 : 2.0;
