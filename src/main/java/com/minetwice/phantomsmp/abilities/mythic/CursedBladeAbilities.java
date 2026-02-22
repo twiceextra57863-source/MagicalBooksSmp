@@ -58,7 +58,7 @@ public class CursedBladeAbilities {
                     double z = Math.sin(rad) * radius;
                     
                     player.getWorld().spawnParticle(
-                        Particle.CRIT_MAGIC,
+                        Particle.ENCHANTED_HIT,  // Replaced CRIT_MAGIC
                         player.getLocation().clone().add(x, 1, z),
                         0, 0, 0, 0, 0
                     );
