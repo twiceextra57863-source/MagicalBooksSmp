@@ -58,7 +58,7 @@ public class GravityLordAbilities {
             "Zero Gravity",
             "§7Levitation for 1 second",
             25, 22, 20,
-            Particle.LEVITATION,
+            Particle.END_ROD,  // Replaced LEVITATION with END_ROD
             Sound.ENTITY_SHULKER_SHOOT,
             (player, level) -> {
                 int duration = level == 1 ? 20 : level == 2 ? 30 : 40;
@@ -70,7 +70,7 @@ public class GravityLordAbilities {
                     double z = (Math.random() - 0.5) * radius;
                     
                     player.getWorld().spawnParticle(
-                        Particle.LEVITATION,
+                        Particle.END_ROD,  // Replaced LEVITATION with END_ROD
                         player.getLocation().clone().add(x, Math.random() * 3, z),
                         0, 0, 0, 0, 0.1
                     );
