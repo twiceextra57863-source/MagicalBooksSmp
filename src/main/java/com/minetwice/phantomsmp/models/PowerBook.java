@@ -2,8 +2,6 @@ package com.minetwice.phantomsmp.models;
 
 import com.minetwice.phantomsmp.PhantomSMP;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -46,7 +44,7 @@ public class PowerBook {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
         
-        // Set book title and author - Fixed: Use Component.text() properly
+        // Set book title and author
         meta.title(Component.text("§8§l[ §r" + getColoredName() + " §8§l]"));
         meta.author(Component.text("§7PhantomSMP"));
         
@@ -91,7 +89,7 @@ public class PowerBook {
         
         meta.pages(pages);
         
-        // Add persistent data - Fixed: Use PhantomSMP.getInstance()
+        // Add persistent data
         meta.getPersistentDataContainer().set(
             NamespacedKey.fromString("phantomsmp:book_id", PhantomSMP.getInstance()),
             PersistentDataType.STRING, 
@@ -133,17 +131,51 @@ public class PowerBook {
     }
     
     // Getters and Setters
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getTheme() { return theme; }
-    public String getDescription() { return description; }
-    public BookAbility getAbility1() { return ability1; }
-    public BookAbility getAbility2() { return ability2; }
-    public BookAbility getAbility3() { return ability3; }
-    public int getLevel() { return level; }
-    public void setLevel(int level) { this.level = level; }
-    public int getKills() { return kills; }
-    public void setKills(int kills) { this.kills = kills; }
-    public UUID getOwnerUUID() { return ownerUUID; }
-}D getOwnerUUID() { return ownerUUID; }
+    public String getId() { 
+        return id; 
+    }
+    
+    public String getName() { 
+        return name; 
+    }
+    
+    public String getTheme() { 
+        return theme; 
+    }
+    
+    public String getDescription() { 
+        return description; 
+    }
+    
+    public BookAbility getAbility1() { 
+        return ability1; 
+    }
+    
+    public BookAbility getAbility2() { 
+        return ability2; 
+    }
+    
+    public BookAbility getAbility3() { 
+        return ability3; 
+    }
+    
+    public int getLevel() { 
+        return level; 
+    }
+    
+    public void setLevel(int level) { 
+        this.level = level; 
+    }
+    
+    public int getKills() { 
+        return kills; 
+    }
+    
+    public void setKills(int kills) { 
+        this.kills = kills; 
+    }
+    
+    public UUID getOwnerUUID() { 
+        return ownerUUID; 
+    }
 }
