@@ -1,0 +1,18 @@
+name: PhantomSMP
+version: '1.0-SNAPSHOT'
+main: com.minetwice.phantomsmp.PhantomSMP
+api-version: '1.20'
+description: Core plugin for PhantomSMP
+commands:
+  smpstart:
+    description: Start the SMP
+  smprewind:
+    description: Rewind the SMP
+  gems:
+    description: View your gems
+  gemgive:
+    description: Give gems
+  trade:
+    description: Trade command
+  debug:
+    description: Debugging commands
