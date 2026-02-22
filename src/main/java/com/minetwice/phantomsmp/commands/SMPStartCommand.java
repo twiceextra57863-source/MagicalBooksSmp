@@ -47,8 +47,8 @@ public class SMPStartCommand implements CommandExecutor {
         // First timer: 5 seconds
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.showTitle(Title.title(
-                Component.text(MessageUtils.format("&6&lTHE SMP STARTED BY &e&l" + starter.getName())).toString(), // Fixed
-                Component.text(MessageUtils.format("&7Prepare yourself...")).toString(),
+                Component.text(MessageUtils.format("&6&lTHE SMP STARTED BY &e&l" + starter.getName())),
+                Component.text(MessageUtils.format("&7Prepare yourself...")),
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
             ));
         });
@@ -113,10 +113,10 @@ public class SMPStartCommand implements CommandExecutor {
                     player.setAllowFlight(false);
                     player.setFlying(false);
                     
-                    // Show awakening title - Fixed
+                    // Show awakening title
                     player.showTitle(Title.title(
-                        Component.text(MessageUtils.format("&5&lYOU HAVE AWAKENED")).toString(),
-                        Component.text(MessageUtils.format("&d&l" + book.getName())).toString(),
+                        Component.text(MessageUtils.format("&5&lYOU HAVE AWAKENED")),
+                        Component.text(MessageUtils.format("&d&l" + book.getName())),
                         Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
                     ));
                     
