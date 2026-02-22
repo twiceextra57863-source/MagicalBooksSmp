@@ -1,21 +1,32 @@
 package com.minetwice.phantomsmp.models;
 
-import java.util.UUID;
+import org.bukkit.entity.Player;
 
 public class TradeRequest {
-    private UUID sender;
-    private UUID target;
-
-    public TradeRequest(UUID sender, UUID target) {
-        this.sender = sender;
+    
+    private final Player requester;
+    private final Player target;
+    private final long timestamp;
+    
+    public TradeRequest(Player requester, Player target) {
+        this.requester = requester;
         this.target = target;
+        this.timestamp = System.currentTimeMillis();
     }
-
-    public UUID getSender() {
-        return sender;
+    
+    public Player getRequester() {
+        return requester;
     }
-
-    public UUID getTarget() {
+    
+    public Player getTarget() {
         return target;
+    }
+    
+    public long getTimestamp() {
+        return timestamp;
+    }
+    
+    public boolean isExpired(int timeoutSeconds) {
+        return System.currentTimeMillis() - timestamp > (timeoutSeconds * 1000L);
     }
 }
