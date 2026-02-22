@@ -294,7 +294,7 @@ public class GemManager {
                         
                         for (double y = 0; y <= 3; y += 0.5) {
                             target.getWorld().spawnParticle(
-                                Particle.SPELL_WITCH,
+                                Particle.WITCH,
                                 target.getLocation().clone().add(x, y, z),
                                 0, 0, 0, 0, 1
                             );
@@ -475,7 +475,7 @@ public class GemManager {
                     double z = Math.sin(rad) * radius;
                     
                     player.getWorld().spawnParticle(
-                        Particle.CRIT_MAGIC,
+                        Particle.ENCHANTED_HIT,
                         player.getLocation().clone().add(x, 1, z),
                         0, 0, 0, 0, 0
                     );
