@@ -76,6 +76,36 @@ public class AbilityListener implements Listener {
         
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
+package com.minetwice.phantomsmp.listeners;
+
+import com.minetwice.phantomsmp.PhantomSMP;
+import com.minetwice.phantomsmp.models.PowerBook;
+import com.minetwice.phantomsmp.utils.MessageUtils;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
+public class AbilityListener implements Listener {
+    
+    private final PhantomSMP plugin;
+    
+    public AbilityListener(PhantomSMP plugin) {
+        this.plugin = plugin;
+    }
+    
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (!event.hasItem()) return;
+        
+        Player player = event.getPlayer();
+        ItemStack item = event.getItem();
         
         if (item == null || item.getType() != Material.WRITTEN_BOOK) return;
         if (!plugin.getGemManager().isPowerBook(item)) return;
@@ -88,7 +118,7 @@ public class AbilityListener implements Listener {
         if (book == null) return;
         
         if (plugin.getGraceManager().isGracePeriod()) {
-            player.sendMessage(MessageUtils.format("&cAbilities are disabled during grace period!"));
+            player.sendMessage(MessageUtils.colorize("&cAbilities are disabled during grace period!"));
             return;
         }
         
@@ -126,7 +156,7 @@ public class AbilityListener implements Listener {
         if (newItem != null && plugin.getGemManager().isPowerBook(newItem)) {
             PowerBook book = plugin.getGemManager().getPlayerBook(player.getUniqueId());
             if (book != null) {
-                player.sendActionBar(MessageUtils.format(
+                player.sendActionBar(MessageUtils.colorize(
                     "&d" + book.getName() + " &7| &eLevel " + book.getLevel() + 
                     " &7| &cKills: " + book.getKills() + "/" + (book.getLevel() == 1 ? 10 : 25)
                 ));
@@ -135,20 +165,26 @@ public class AbilityListener implements Listener {
     }
     
     private void activateAbility(Player player, PowerBook book, int abilityNumber) {
-        String cooldownKey = player.getUniqueId() + "_" + book.getId() + "_" + abilityNumber;
+        String cooldownKey = player.getUniqueId().toString() + "_" + book.getId() + "_" + abilityNumber;
         
         if (plugin.getCooldownManager().isOnCooldown(cooldownKey)) {
             long remaining = plugin.getCooldownManager().getRemainingCooldown(cooldownKey);
-            player.sendActionBar(MessageUtils.format("&cAbility on cooldown: &e" + remaining + "s"));
+            player.sendActionBar(MessageUtils.colorize("&cAbility on cooldown: &e" + remaining + "s"));
             return;
         }
         
-        var ability = switch (abilityNumber) {
-            case 1 -> book.getAbility1();
-            case 2 -> book.getAbility2();
-            case 3 -> book.getAbility3();
-            default -> null;
-        };
+        BookAbility ability = null;
+        switch (abilityNumber) {
+            case 1:
+                ability = book.getAbility1();
+                break;
+            case 2:
+                ability = book.getAbility2();
+                break;
+            case 3:
+                ability = book.getAbility3();
+                break;
+        }
         
         if (ability == null) return;
         
@@ -165,7 +201,7 @@ public class AbilityListener implements Listener {
             startCooldownDisplay(player, cooldownKey, cooldown);
             
         } catch (Exception e) {
-            player.sendMessage(MessageUtils.format("&cAbility execution failed!"));
+            player.sendMessage(MessageUtils.colorize("&cAbility execution failed!"));
             e.printStackTrace();
         }
     }
@@ -177,12 +213,12 @@ public class AbilityListener implements Listener {
             @Override
             public void run() {
                 if (remaining <= 0 || !plugin.getCooldownManager().isOnCooldown(cooldownKey)) {
-                    player.sendActionBar(MessageUtils.format("&aAbility ready!"));
+                    player.sendActionBar(MessageUtils.colorize("&aAbility ready!"));
                     cancel();
                     return;
                 }
                 
-                player.sendActionBar(MessageUtils.format("&cCooldown: &e" + remaining + "s"));
+                player.sendActionBar(MessageUtils.colorize("&cCooldown: &e" + remaining + "s"));
                 remaining--;
             }
         }.runTaskTimer(plugin, 0L, 20L);
