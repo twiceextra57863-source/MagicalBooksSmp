@@ -1,6 +1,8 @@
 package com.minetwice.phantomsmp.abilities.ghost;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -21,7 +23,8 @@ public class EclipseLordAbilities {
                 int duration = level == 1 ? 80 : level == 2 ? 100 : 120;
                 int resistanceLevel = level == 1 ? 0 : level == 2 ? 0 : 1;
                 
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, resistanceLevel));
+                // FIXED: Use RESISTANCE instead of DAMAGE_RESISTANCE
+                player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, duration, resistanceLevel));
                 
                 // Shadow cloak effect
                 for (int i = 0; i < 50; i++) {
@@ -46,7 +49,7 @@ public class EclipseLordAbilities {
             "Dark Pull",
             "§7Pull target §b4 blocks §7toward you",
             35, 32, 30,
-            Particle.SMOKE_LARGE,
+            Particle.LARGE_SMOKE,  // Replaced SMOKE_LARGE
             Sound.ENTITY_ENDERMAN_TELEPORT,
             (player, level) -> {
                 double pullStrength = level == 1 ? 0.5 : level == 2 ? 0.6 : 0.7;
@@ -67,7 +70,7 @@ public class EclipseLordAbilities {
                                 .add(direction.clone().multiply(t * 3));
                             
                             target.getWorld().spawnParticle(
-                                Particle.SMOKE_LARGE,
+                                Particle.LARGE_SMOKE,
                                 pos.getX(), pos.getY() + 1, pos.getZ(),
                                 0, 0, 0, 0, 0.1
                             );
