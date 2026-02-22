@@ -1,3 +1,56 @@
 # PhantomSMP Configuration
-grace-period: 3600
-max-gems: 10
+# Author: MineTwice
+
+database:
+  type: "sqlite" # sqlite or mysql
+  host: "localhost"
+  port: 3306
+  database: "phantomsmp"
+  username: "root"
+  password: ""
+
+grace:
+  duration: 600 # 10 minutes in seconds
+  pvp-disabled: true
+  countdown-actionbar: true
+
+abilities:
+  max-cooldown: 180 # 3 minutes in seconds
+  cooldown-display: true
+  
+particles:
+  enabled: true
+  intensity: 1.0 # 0.0 to 1.0
+  tps-limit: 18 # Disable particles if TPS below this
+  max-particles-per-tick: 100
+
+leveling:
+  level2-kills: 10
+  level3-kills: 25
+  kill-messages: true
+  levelup-sound: true
+  levelup-title: true
+
+damage:
+  # Global damage modifiers
+  pvp-reduction: 1.0 # 1.0 = 100% damage
+  pve-reduction: 1.0
+  
+  # Ability damage caps
+  max-ability-damage: 14 # Max hearts
+  min-ability-damage: 2
+
+trade:
+  timeout: 30 # seconds
+  freeze-duration: 2 # seconds
+  allow-during-grace: false
+
+protection:
+  prevent-duplication: true
+  prevent-stacking: true
+  prevent-chest-storage: true
+  prevent-dropping: true
+  prevent-rename: true
+  prevent-crafting: true
+  prevent-lava-destroy: true
+  prevent-grindstone: true
