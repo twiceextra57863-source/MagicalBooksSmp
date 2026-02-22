@@ -1,11 +1,13 @@
 package com.minetwice.phantomsmp.abilities.ghost;
 
+import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.BookAbility;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 public class NightmareAbilities {
     
@@ -120,7 +122,7 @@ public class NightmareAbilities {
                     .filter(e -> e instanceof Player && !e.equals(player))
                     .forEach(e -> {
                         ((Player) e).damage(damage, player);
-                        org.bukkit.util.Vector away = e.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
+                        Vector away = e.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
                         e.setVelocity(away.multiply(knockback).setY(0.5));
                     });
                 
