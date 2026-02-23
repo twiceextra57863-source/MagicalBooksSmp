@@ -3,6 +3,7 @@ package com.minetwice.phantomsmp.models;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerData {
     
@@ -12,84 +13,82 @@ public class PlayerData {
     private int bookLevel;
     private int kills;
     private boolean graceActive;
-    private final Map<String, Long> cooldowns = new HashMap<>();
+    private long lastSeen;
+    private long playtime;
+    private final Map<String, Long> cooldowns = new ConcurrentHashMap<>();
+    private final Map<String, Object> metadata = new HashMap<>();
     
     public PlayerData(UUID playerUUID) {
         this.playerUUID = playerUUID;
+        this.lastSeen = System.currentTimeMillis();
+        this.playtime = 0;
     }
     
-    public UUID getPlayerUUID() {
-        return playerUUID;
+    public UUID getPlayerUUID() { 
+        return playerUUID; 
     }
     
-    public String getPlayerName() {
-        return playerName;
+    public String getPlayerName() { 
+        return playerName; 
     }
     
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
+    public void setPlayerName(String playerName) { 
+        this.playerName = playerName; 
     }
     
-    public String getBookId() {
-        return bookId;
+    public String getBookId() { 
+        return bookId; 
     }
     
-    public void setBookId(String bookId) {
-        this.bookId = bookId;
+    public void setBookId(String bookId) { 
+        this.bookId = bookId; 
     }
     
-    public int getBookLevel() {
-        return bookLevel;
+    public int getBookLevel() { 
+        return bookLevel; 
     }
     
-    public void setBookLevel(int bookLevel) {
-        this.bookLevel = bookLevel;
+    public void setBookLevel(int bookLevel) { 
+        this.bookLevel = bookLevel; 
     }
     
-    public int getKills() {
-        return kills;
+    public int getKills() { 
+        return kills; 
     }
     
-    public void setKills(int kills) {
-        this.kills = kills;
+    public void setKills(int kills) { 
+        this.kills = kills; 
     }
     
-    public boolean isGraceActive() {
-        return graceActive;
+    public boolean isGraceActive() { 
+        return graceActive; 
     }
     
-    public void setGraceActive(boolean graceActive) {
-        this.graceActive = graceActive;
+    public void setGraceActive(boolean graceActive) { 
+        this.graceActive = graceActive; 
     }
     
-    public Map<String, Long> getCooldowns() {
-        return cooldowns;
+    public long getLastSeen() { 
+        return lastSeen; 
     }
     
-    public void setCooldown(String abilityKey, long expiry) {
-        cooldowns.put(abilityKey, expiry);
+    public void setLastSeen(long lastSeen) { 
+        this.lastSeen = lastSeen; 
     }
     
-    public void removeCooldown(String abilityKey) {
-        cooldowns.remove(abilityKey);
+    public long getPlaytime() { 
+        return playtime; 
     }
     
-    public boolean hasCooldown(String abilityKey) {
-        if (!cooldowns.containsKey(abilityKey)) return false;
-        
-        long expiry = cooldowns.get(abilityKey);
-        if (System.currentTimeMillis() >= expiry) {
-            cooldowns.remove(abilityKey);
-            return false;
-        }
-        
-        return true;
+    public void setPlaytime(long playtime) { 
+        this.playtime = playtime; 
     }
     
-    public long getCooldownRemaining(String abilityKey) {
-        if (!cooldowns.containsKey(abilityKey)) return 0;
-        
-        long remaining = (cooldowns.get(abilityKey) - System.currentTimeMillis()) / 1000;
-        return Math.max(0, remaining);
+    public Map<String, Long> getCooldowns() { 
+        return cooldowns; 
+    }
+    
+    public Map<String, Object> getMetadata() { 
+        return metadata; 
     }
 }
