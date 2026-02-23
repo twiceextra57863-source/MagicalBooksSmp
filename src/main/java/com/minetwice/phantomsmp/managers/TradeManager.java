@@ -4,9 +4,6 @@ import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.models.PowerBook;
 import com.minetwice.phantomsmp.models.TradeRequest;
 import com.minetwice.phantomsmp.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -35,20 +32,10 @@ public class TradeManager {
         TradeRequest request = new TradeRequest(requester, target);
         pendingRequests.put(target.getUniqueId(), request);
         
-        // Send request message with clickable buttons
-        Component acceptButton = Component.text("                      [§a§lACCEPT§r]                      ")
-            .clickEvent(ClickEvent.runCommand("/trade accept"))
-            .hoverEvent(HoverEvent.showText(Component.text("§aClick to accept trade")));
-            
-        Component rejectButton = Component.text("                      [§c§lREJECT§r]                      ")
-            .clickEvent(ClickEvent.runCommand("/trade reject"))
-            .hoverEvent(HoverEvent.showText(Component.text("§cClick to reject trade")));
-        
         requester.sendMessage(MessageUtils.format("&eTrade request sent to " + target.getName()));
         
         target.sendMessage(MessageUtils.format("&e" + requester.getName() + " wants to trade power books!"));
-        target.sendMessage(acceptButton);
-        target.sendMessage(rejectButton);
+        target.sendMessage(MessageUtils.format("&aType '/trade accept' to accept or '/trade reject' to reject"));
         
         // Set timeout
         int timeoutSeconds = plugin.getConfig().getInt("trade.timeout", 30);
@@ -68,9 +55,14 @@ public class TradeManager {
         requestTimeouts.put(target.getUniqueId(), timeout);
     }
     
-    public void acceptTrade(TradeRequest request) {
+    public void acceptTrade(Player target) {
+        TradeRequest request = pendingRequests.get(target.getUniqueId());
+        if (request == null) {
+            target.sendMessage(MessageUtils.format("&cYou don't have any pending trade requests!"));
+            return;
+        }
+        
         Player requester = request.getRequester();
-        Player target = request.getTarget();
         
         // Cancel timeout
         if (requestTimeouts.containsKey(target.getUniqueId())) {
@@ -80,6 +72,12 @@ public class TradeManager {
         
         // Remove pending request
         pendingRequests.remove(target.getUniqueId());
+        
+        // Check if both players are online
+        if (!requester.isOnline()) {
+            target.sendMessage(MessageUtils.format("&c" + requester.getName() + " is no longer online!"));
+            return;
+        }
         
         // Check if both players still have books
         if (!plugin.getGemManager().hasPowerBook(requester.getUniqueId()) ||
@@ -116,9 +114,13 @@ public class TradeManager {
         }.runTaskLater(plugin, freezeDuration * 20L);
     }
     
-    public void rejectTrade(TradeRequest request) {
+    public void rejectTrade(Player target) {
+        TradeRequest request = pendingRequests.get(target.getUniqueId());
+        if (request == null) {
+            return;
+        }
+        
         Player requester = request.getRequester();
-        Player target = request.getTarget();
         
         // Cancel timeout
         if (requestTimeouts.containsKey(target.getUniqueId())) {
@@ -129,7 +131,9 @@ public class TradeManager {
         // Remove pending request
         pendingRequests.remove(target.getUniqueId());
         
-        requester.sendMessage(MessageUtils.format("&c" + target.getName() + " rejected your trade request."));
+        if (requester.isOnline()) {
+            requester.sendMessage(MessageUtils.format("&c" + target.getName() + " rejected your trade request."));
+        }
         target.sendMessage(MessageUtils.format("&aYou rejected the trade request."));
     }
     
@@ -166,10 +170,9 @@ public class TradeManager {
             }
         }
         
-        for (ItemStack item : player.getInventory().getExtraContents()) {
-            if (item != null && plugin.getGemManager().isPowerBook(item)) {
-                item.setAmount(0);
-            }
+        ItemStack offHand = player.getInventory().getItemInOffHand();
+        if (plugin.getGemManager().isPowerBook(offHand)) {
+            player.getInventory().setItemInOffHand(null);
         }
     }
     
@@ -193,7 +196,9 @@ public class TradeManager {
         // Remove as target
         if (pendingRequests.containsKey(player.getUniqueId())) {
             TradeRequest request = pendingRequests.get(player.getUniqueId());
-            request.getRequester().sendMessage(MessageUtils.format("&c" + player.getName() + " left the game, trade cancelled."));
+            if (request.getRequester().isOnline()) {
+                request.getRequester().sendMessage(MessageUtils.format("&c" + player.getName() + " left the game, trade cancelled."));
+            }
             
             if (requestTimeouts.containsKey(player.getUniqueId())) {
                 requestTimeouts.get(player.getUniqueId()).cancel();
