@@ -1,8 +1,11 @@
 package com.minetwice.phantomsmp.utils;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -13,6 +16,7 @@ public class ItemBuilder {
     
     private final ItemStack item;
     private final ItemMeta meta;
+    private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
     
     public ItemBuilder(Material material) {
         this.item = new ItemStack(material);
@@ -25,26 +29,38 @@ public class ItemBuilder {
     }
     
     public ItemBuilder setName(String name) {
-        meta.displayName(MessageUtils.format(name));
+        if (meta != null) {
+            // Convert legacy color codes to Component
+            Component displayName = LEGACY_SERIALIZER.deserialize(MessageUtils.colorize(name));
+            meta.displayName(displayName);
+        }
         return this;
     }
     
     public ItemBuilder setLore(String... lore) {
-        List<Component> loreComponents = new ArrayList<>();
-        for (String line : lore) {
-            loreComponents.add(MessageUtils.format(line));
+        if (meta != null) {
+            List<Component> loreComponents = new ArrayList<>();
+            for (String line : lore) {
+                // Convert each line to Component
+                Component loreLine = LEGACY_SERIALIZER.deserialize(MessageUtils.colorize(line));
+                loreComponents.add(loreLine);
+            }
+            meta.lore(loreComponents);
         }
-        meta.lore(loreComponents);
         return this;
     }
     
     public ItemBuilder addLoreLine(String line) {
-        List<Component> lore = meta.lore();
-        if (lore == null) {
-            lore = new ArrayList<>();
+        if (meta != null) {
+            List<Component> lore = meta.lore();
+            if (lore == null) {
+                lore = new ArrayList<>();
+            }
+            // Convert line to Component
+            Component loreLine = LEGACY_SERIALIZER.deserialize(MessageUtils.colorize(line));
+            lore.add(loreLine);
+            meta.lore(lore);
         }
-        lore.add(MessageUtils.format(line));
-        meta.lore(lore);
         return this;
     }
     
@@ -54,30 +70,38 @@ public class ItemBuilder {
     }
     
     public ItemBuilder setUnbreakable(boolean unbreakable) {
-        meta.setUnbreakable(unbreakable);
+        if (meta != null) {
+            meta.setUnbreakable(unbreakable);
+        }
         return this;
     }
     
     public ItemBuilder addEnchant(Enchantment enchantment, int level, boolean ignoreLevelRestriction) {
-        meta.addEnchant(enchantment, level, ignoreLevelRestriction);
+        if (meta != null) {
+            meta.addEnchant(enchantment, level, ignoreLevelRestriction);
+        }
         return this;
     }
     
     public ItemBuilder setGlow(boolean glow) {
-        if (glow) {
+        if (meta != null && glow) {
             meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-            meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         return this;
     }
     
     public ItemBuilder setCustomModelData(int data) {
-        meta.setCustomModelData(data);
+        if (meta != null) {
+            meta.setCustomModelData(data);
+        }
         return this;
     }
     
     public ItemStack build() {
-        item.setItemMeta(meta);
+        if (meta != null) {
+            item.setItemMeta(meta);
+        }
         return item;
     }
 }
