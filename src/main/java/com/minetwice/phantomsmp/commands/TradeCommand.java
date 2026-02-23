@@ -1,11 +1,7 @@
 package com.minetwice.phantomsmp.commands;
 
 import com.minetwice.phantomsmp.PhantomSMP;
-import com.minetwice.phantomsmp.models.TradeRequest;
 import com.minetwice.phantomsmp.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,11 +25,25 @@ public class TradeCommand implements CommandExecutor {
         
         if (args.length < 1) {
             player.sendMessage(MessageUtils.format("&cUsage: /trade <player>"));
+            player.sendMessage(MessageUtils.format("&cOr: /trade accept"));
+            player.sendMessage(MessageUtils.format("&cOr: /trade reject"));
+            return true;
+        }
+        
+        // Handle accept
+        if (args[0].equalsIgnoreCase("accept")) {
+            plugin.getTradeManager().acceptTrade(player);
+            return true;
+        }
+        
+        // Handle reject
+        if (args[0].equalsIgnoreCase("reject")) {
+            plugin.getTradeManager().rejectTrade(player);
             return true;
         }
         
         // Check if in grace period
-        if (plugin.getGraceManager().isGracePeriod() && !plugin.getConfig().getBoolean("trade.allow-during-grace", false)) {
+        if (plugin.getGraceManager().isGracePeriod()) {
             player.sendMessage(MessageUtils.format("&cTrading is not allowed during grace period!"));
             return true;
         }
@@ -44,9 +54,15 @@ public class TradeCommand implements CommandExecutor {
             return true;
         }
         
+        // Get target player
         Player target = Bukkit.getPlayer(args[0]);
-        if (target == null || target.equals(player)) {
-            player.sendMessage(MessageUtils.format("&cInvalid player!"));
+        if (target == null) {
+            player.sendMessage(MessageUtils.format("&cPlayer not found!"));
+            return true;
+        }
+        
+        if (target.equals(player)) {
+            player.sendMessage(MessageUtils.format("&cYou cannot trade with yourself!"));
             return true;
         }
         
