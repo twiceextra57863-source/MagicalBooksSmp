@@ -2,9 +2,8 @@ package com.minetwice.phantomsmp.managers;
 
 import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class GraceManager {
@@ -22,11 +21,17 @@ public class GraceManager {
         this.gracePeriod = true;
         this.graceTimeRemaining = plugin.getConfig().getInt("grace.duration", 600); // 10 minutes default
         
-        // Disable PvP
-        Bukkit.getWorlds().forEach(w -> w.setPVP(false));
+        // Disable PvP in all worlds
+        for (World world : Bukkit.getWorlds()) {
+            world.setPVP(false);
+        }
         
         // Start countdown
         startCountdown();
+        
+        // Broadcast start
+        Bukkit.broadcastMessage(MessageUtils.format("&a&lGrace period started! PvP is disabled for " + 
+            (graceTimeRemaining / 60) + " minutes."));
     }
     
     private void startCountdown() {
@@ -57,14 +62,16 @@ public class GraceManager {
     private void endGracePeriod() {
         this.gracePeriod = false;
         
-        // Enable PvP
-        Bukkit.getWorlds().forEach(w -> w.setPVP(true));
+        // Enable PvP in all worlds
+        for (World world : Bukkit.getWorlds()) {
+            world.setPVP(true);
+        }
         
         // Announce end of grace period
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            p.sendMessage(MessageUtils.format("&c&lGRACE PERIOD ENDED! PvP IS NOW ENABLED!"));
-            p.playSound(p.getLocation(), org.bukkit.Sound.ENTITY_WITHER_SPAWN, 1.0f, 0.5f);
-        });
+        Bukkit.broadcastMessage(MessageUtils.format("&c&lGRACE PERIOD ENDED! PvP IS NOW ENABLED!"));
+        Bukkit.getOnlinePlayers().forEach(p -> 
+            p.playSound(p.getLocation(), org.bukkit.Sound.ENTITY_WITHER_SPAWN, 1.0f, 0.5f)
+        );
     }
     
     private String formatTime(int seconds) {
@@ -86,6 +93,10 @@ public class GraceManager {
             countdownTask.cancel();
         }
         gracePeriod = false;
-        Bukkit.getWorlds().forEach(w -> w.setPVP(true));
+        
+        // Enable PvP
+        for (World world : Bukkit.getWorlds()) {
+            world.setPVP(true);
+        }
     }
 }
