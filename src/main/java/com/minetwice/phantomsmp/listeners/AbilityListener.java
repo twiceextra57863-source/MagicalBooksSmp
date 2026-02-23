@@ -1,10 +1,9 @@
 package com.minetwice.phantomsmp.listeners;
 
 import com.minetwice.phantomsmp.PhantomSMP;
+import com.minetwice.phantomsmp.models.BookAbility;
 import com.minetwice.phantomsmp.models.PowerBook;
 import com.minetwice.phantomsmp.utils.MessageUtils;
-import com.minetwice.phantomsmp.utils.ParticleUtils;
-import com.minetwice.phantomsmp.utils.SoundUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,105 +25,42 @@ public class AbilityListener implements Listener {
     
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.hasItem()) return;
+        if (!event.hasItem()) {
+            return;
+        }
         
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
         
-        if (item == null || item.getType() != Material.WRITTEN_BOOK) return;
-        if (!plugin.getGemManager().isPowerBook(item)) return;
+        if (item == null || item.getType() != Material.WRITTEN_BOOK) {
+            return;
+        }
         
-        // Cancel default book interaction
+        if (!plugin.getGemManager().isPowerBook(item)) {
+            return;
+        }
+        
         event.setCancelled(true);
         
-        // Check if player is sneaking
         if (!player.isSneaking()) {
-            // Idle particle effects when holding book
             plugin.getParticleManager().spawnIdleParticles(player);
             return;
         }
         
-        // Get player's power book
         PowerBook book = plugin.getGemManager().getPlayerBook(player.getUniqueId());
-package com.minetwice.phantomsmp.listeners;
-
-import com.minetwice.phantomsmp.PhantomSMP;
-import com.minetwice.phantomsmp.models.PowerBook;
-import com.minetwice.phantomsmp.utils.MessageUtils;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
-public class AbilityListener implements Listener {
-    
-    private final PhantomSMP plugin;
-    
-    public AbilityListener(PhantomSMP plugin) {
-        this.plugin = plugin;
-    }
-    
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.hasItem()) return;
-        
-        Player player = event.getPlayer();
-        ItemStack item = event.getItem();
-package com.minetwice.phantomsmp.listeners;
-
-import com.minetwice.phantomsmp.PhantomSMP;
-import com.minetwice.phantomsmp.models.PowerBook;
-import com.minetwice.phantomsmp.utils.MessageUtils;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
-public class AbilityListener implements Listener {
-    
-    private final PhantomSMP plugin;
-    
-    public AbilityListener(PhantomSMP plugin) {
-        this.plugin = plugin;
-    }
-    
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.hasItem()) return;
-        
-        Player player = event.getPlayer();
-        ItemStack item = event.getItem();
-        
-        if (item == null || item.getType() != Material.WRITTEN_BOOK) return;
-        if (!plugin.getGemManager().isPowerBook(item)) return;
-        
-        event.setCancelled(true);
-        
-        if (!player.isSneaking()) return;
-        
-        PowerBook book = plugin.getGemManager().getPlayerBook(player.getUniqueId());
-        if (book == null) return;
+        if (book == null) {
+            return;
+        }
         
         if (plugin.getGraceManager().isGracePeriod()) {
             player.sendMessage(MessageUtils.colorize("&cAbilities are disabled during grace period!"));
             return;
         }
         
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        Action action = event.getAction();
+        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
             activateAbility(player, book, 1);
-        } else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+        } else if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
             activateAbility(player, book, 2);
         }
     }
@@ -156,10 +92,10 @@ public class AbilityListener implements Listener {
         if (newItem != null && plugin.getGemManager().isPowerBook(newItem)) {
             PowerBook book = plugin.getGemManager().getPlayerBook(player.getUniqueId());
             if (book != null) {
-                player.sendActionBar(MessageUtils.colorize(
-                    "&d" + book.getName() + " &7| &eLevel " + book.getLevel() + 
-                    " &7| &cKills: " + book.getKills() + "/" + (book.getLevel() == 1 ? 10 : 25)
-                ));
+                String message = "&d" + book.getName() + " &7| &eLevel " + book.getLevel() + 
+                                 " &7| &cKills: " + book.getKills() + "/" + 
+                                 (book.getLevel() == 1 ? 10 : (book.getLevel() == 2 ? 25 : 0));
+                player.sendActionBar(MessageUtils.colorize(message));
             }
         }
     }
@@ -184,9 +120,13 @@ public class AbilityListener implements Listener {
             case 3:
                 ability = book.getAbility3();
                 break;
+            default:
+                return;
         }
         
-        if (ability == null) return;
+        if (ability == null) {
+            return;
+        }
         
         try {
             ability.getExecutor().execute(player, book.getLevel());
