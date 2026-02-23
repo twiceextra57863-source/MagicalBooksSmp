@@ -34,7 +34,7 @@
     </dependencies>
 
     <build>
-        <finalName>PhantomSMP-${project.version}-paper-1.21.4</finalName>
+        <finalName>PhantomSMP-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
