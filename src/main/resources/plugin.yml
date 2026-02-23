@@ -1,79 +1,36 @@
 name: PhantomSMP
-version: 2.0.0
+version: 1.0.0
 main: com.minetwice.phantomsmp.PhantomSMP
 api-version: 1.21
 author: MineTwice
-description: 30 Unique Power Books System for SMP with advanced mechanics
-website: https://github.com/MineTwice/PhantomSMP
-
-softdepend:
-  - WorldGuard
-  - PlaceholderAPI
-  - Vault
-  - ProtocolLib
+description: 30 Unique Power Books System for SMP
 
 commands:
   smpstart:
     description: Start the SMP and distribute power books
     usage: /smpstart
     permission: phantomsmp.admin
-    aliases: [start]
   smprewind:
     description: Remove all power books from players
     usage: /smprewind
     permission: phantomsmp.admin
-    aliases: [rewind]
   books:
     description: Open power books menu
     usage: /books
     permission: phantomsmp.admin
-    aliases: [powerbooks, pbooks]
   bookgive:
     description: Give a specific power book to a player
     usage: /bookgive <player> <book>
     permission: phantomsmp.admin
-    aliases: [givebook]
   trade:
     description: Trade power books with another player
     usage: /trade <player>
     permission: phantomsmp.player
-  bookinfo:
-    description: View power book information
-    usage: /bookinfo [player]
-    permission: phantomsmp.admin
-    aliases: [binfo]
-  setbooklevel:
-    description: Set a player's power book level
-    usage: /setbooklevel <player> <level>
-    permission: phantomsmp.admin
-  addkills:
-    description: Add kills to a player's power book
-    usage: /addkills <player> <amount>
-    permission: phantomsmp.admin
-  resetcooldowns:
-    description: Reset all cooldowns for a player
-    usage: /resetcooldowns [player]
-    permission: phantomsmp.admin
-    aliases: [resetcd]
 
 permissions:
-  phantomsmp.*:
-    description: All PhantomSMP permissions
-    default: op
-    children:
-      phantomsmp.admin: true
-      phantomsmp.player: true
-      phantomsmp.bypass: true
   phantomsmp.admin:
-    description: Admin permissions for PhantomSMP
+    description: Admin permissions
     default: op
-    children:
-      phantomsmp.player: true
   phantomsmp.player:
-    description: Player permissions for PhantomSMP
+    description: Player permissions
     default: true
-  phantomsmp.bypass:
-    description: Bypass protection systems
-    default: op
-    children:
-      phantomsmp.player: true
