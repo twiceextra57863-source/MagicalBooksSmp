@@ -2,6 +2,7 @@ package com.minetwice.phantomsmp.commands;
 
 import com.minetwice.phantomsmp.PhantomSMP;
 import com.minetwice.phantomsmp.utils.MessageUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -21,14 +22,13 @@ public class SMPRewindCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("phantomsmp.admin")) {
-            sender.sendMessage(MessageUtils.format("&cYou don't have permission!"));
+            sender.sendMessage(MessageUtils.colorize("&cYou don't have permission!"));
             return true;
         }
         
-        // Confirm argument
         if (args.length < 1 || !args[0].equalsIgnoreCase("confirm")) {
-            sender.sendMessage(MessageUtils.format("&c&lWARNING: &7This will remove all power books from all players!"));
-            sender.sendMessage(MessageUtils.format("&eUse &6/smprewind confirm &eto proceed."));
+            sender.sendMessage(MessageUtils.colorize("&c&lWARNING: &7This will remove all power books from all players!"));
+            sender.sendMessage(MessageUtils.colorize("&eUse &6/smprewind confirm &eto proceed."));
             return true;
         }
         
@@ -36,14 +36,15 @@ public class SMPRewindCommand implements CommandExecutor {
         for (Player player : Bukkit.getOnlinePlayers()) {
             removePowerBooks(player);
             plugin.getGemManager().removePlayerBook(player.getUniqueId());
-            player.sendMessage(MessageUtils.format("&cYour power book has been removed by an admin."));
+            player.sendMessage(MessageUtils.colorize("&cYour power book has been removed by an admin."));
         }
         
         // Cancel grace period if active
         plugin.getGraceManager().cancelGracePeriod();
         
-        // Broadcast
-        Bukkit.broadcast(MessageUtils.format("&c&lSMP REWIND &8» &7All power books have been reset by " + sender.getName()));
+        // Broadcast using Component
+        String message = "&c&lSMP REWIND &8» &7All power books have been reset by " + sender.getName();
+        Bukkit.broadcast(Component.text(MessageUtils.colorize(message)));
         
         return true;
     }
@@ -56,11 +57,10 @@ public class SMPRewindCommand implements CommandExecutor {
             }
         }
         
-        // Remove from armor/offhand
-        for (ItemStack item : player.getInventory().getExtraContents()) {
-            if (item != null && plugin.getGemManager().isPowerBook(item)) {
-                item.setType(Material.AIR);
-            }
+        // Remove from offhand
+        ItemStack offHand = player.getInventory().getItemInOffHand();
+        if (plugin.getGemManager().isPowerBook(offHand)) {
+            player.getInventory().setItemInOffHand(null);
         }
     }
 }
